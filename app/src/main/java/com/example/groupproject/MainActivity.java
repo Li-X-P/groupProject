@@ -1,5 +1,6 @@
 package com.example.groupproject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -13,6 +14,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.Window;
+import android.widget.Toast;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -22,12 +26,14 @@ public class MainActivity extends AppCompatActivity
     private ReportFragment fragmentReport;
     private Fragment[] fragments;
     private int lastShowFragment = 0;
+    private HashMap<String,Object> information = new HashMap<String,Object>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("Home");
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer);
         mToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.drawerOpen,R.string.drawerClose);
         mDrawerLayout.addDrawerListener(mToggle);
@@ -121,7 +127,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         if(id ==R.id.nav_information){
             Intent Information = new Intent(this,InformationActivity.class);
-            startActivity(Information);
+            startActivityForResult(Information,1);
         }else if(id == R.id.nav_setting){
             Intent Setting = new Intent(this,SettingActivity.class);
             startActivity(Setting);
@@ -131,5 +137,25 @@ public class MainActivity extends AppCompatActivity
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1) {
+            switch (resultCode) {
+                case 1: {
+                    Bundle personalInformation = data.getExtras();
+                    boolean sex = personalInformation.getBoolean("sex");
+                    int age = personalInformation.getInt("age");
+                    if (sex) {
+                        information.put("sex", "male");
+                    } else {
+                        information.put("sex", "female");
+                    }
+                    information.put("age", age);
+                    System.out.println(information);
+
+                }
+            }
+        }
     }
 }
