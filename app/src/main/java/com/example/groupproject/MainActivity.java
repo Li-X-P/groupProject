@@ -2,6 +2,7 @@ package com.example.groupproject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -13,6 +14,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity
     private Fragment[] fragments;
     private int lastShowFragment = 0;
     private Bundle information = new Bundle();
+    private boolean nightMode;
 
 
     @Override
@@ -48,6 +52,19 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+/*    @Override
+    public boolean onPrepareOptionsMenu(Menu menu){
+        if (nightMode) {
+            menu.findItem(R.id.nav_night).setIcon(
+                    R.drawable.ic_action_day);
+            menu.findItem(R.id.nav_night).setCheckable(false);
+        } else {
+            menu.findItem(R.id.nav_night).setIcon(R.drawable.ic_action_night);
+            menu.findItem(R.id.nav_night).setCheckable(true);
+        }
+        // getSupportMenuInflater().inflate(R.menu.book_detail, menu);
+        return super.onPrepareOptionsMenu(menu);
+    }*/
 
     /*
     关于BottomNavigation 的选择
@@ -135,6 +152,18 @@ public class MainActivity extends AppCompatActivity
             Intent About = new Intent(this,AboutActivity.class);
             startActivity(About);
         }
+        else if(id == R.id.nav_night){
+            if(nightMode){
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);//切换日间模式
+                nightMode = false;
+                recreate();
+            }else{
+                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);//切换夜间模式
+                nightMode = true;
+                recreate();
+            }
+            savePersonalNightMode(nightMode);
+        }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -160,4 +189,27 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
+    /**********
+     save nightMode
+     **********/
+    public void savePersonalNightMode(boolean nightMode){
+        SharedPreferences pref_nightMode = getSharedPreferences("NightMode", MODE_PRIVATE);
+        pref_nightMode.edit().putBoolean("nightMode", nightMode).apply();
+
+    }
+    public void loadPersonalNightMode(){
+        SharedPreferences pref_infor = getSharedPreferences("NightMode", MODE_PRIVATE);
+        nightMode = pref_infor.getBoolean("nightMode",false);
+        if(nightMode){
+            getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);//切换日间模式
+        }else{
+            getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);//切换夜间模式
+        }
+
+
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loadPersonalNightMode();}
 }
