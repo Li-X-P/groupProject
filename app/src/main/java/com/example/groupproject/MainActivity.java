@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity
     private ReportFragment fragmentReport;
     private Fragment[] fragments;
     private int lastShowFragment = 0;
-    private HashMap<String,Object> information = new HashMap<String,Object>();
+    private Bundle information = new Bundle();
 
 
     @Override
@@ -146,12 +146,14 @@ public class MainActivity extends AppCompatActivity
                     Bundle personalInformation = data.getExtras();
                     boolean sex = personalInformation.getBoolean("sex");
                     int age = personalInformation.getInt("age");
+                    Double BMI = personalInformation.getDouble("BMI");
                     if (sex) {
-                        information.put("sex", "male");
+                        information.putString("sex", "male");
                     } else {
-                        information.put("sex", "female");
+                        information.putString("sex", "female");
                     }
-                    information.put("age", age);
+                    information.putInt("age", age);
+                    information.putDouble("BMI", BMI);
                     System.out.println(information);
 
                 }

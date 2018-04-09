@@ -17,7 +17,11 @@ public class InformationActivity extends AppCompatActivity {
 
     boolean sex;
     int age;
-    EditText edAge;
+    double height;
+    double weight;
+    EditText etAge;
+    EditText etHeight;
+    EditText etWeight;
     Button inforApply;
     RadioGroup radioSex;
     @Override
@@ -26,28 +30,42 @@ public class InformationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_information);
         setTitle("Personal Information");
 
-        edAge = (EditText)findViewById(R.id.etAge);
+        etAge = (EditText)findViewById(R.id.et_Age);
+        etHeight = (EditText)findViewById(R.id.et_height);
+        etWeight = (EditText)findViewById(R.id.et_weight);
         inforApply = (Button)findViewById(R.id.info_apply);
         inforApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(edAge.getText().toString().equals("")){
-                    Toast.makeText(InformationActivity.this, R.string.inPutWarning,
+                if(etAge.getText().toString().equals("")){
+                    Toast.makeText(InformationActivity.this, R.string.ageWarning,
                             Toast.LENGTH_LONG).show();
-                }else
-                age =  Integer.parseInt(edAge.getText().toString());
-                savePersonalInfor(sex,age);
+                }else if(etHeight.getText().toString().equals("")){
+                    Toast.makeText(InformationActivity.this, R.string.heightWarning,
+                            Toast.LENGTH_LONG).show();
+                }else if(etWeight.getText().toString().equals("")){
+                    Toast.makeText(InformationActivity.this, R.string.weightWarning,
+                            Toast.LENGTH_LONG).show();
+                }else {
+                age =  Integer.parseInt(etAge.getText().toString());
+                height = Double.parseDouble(etHeight.getText().toString());
+                weight = Double.parseDouble(etWeight.getText().toString());
+                }
+
+                savePersonalInfor(sex,age,etHeight.getText().toString(),etWeight.getText().toString());
+                double BMI = weight /((height/100)*(height/100));
 
                 Intent intent = new Intent();
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("sex",sex);
                 bundle.putInt("age",age);
+                bundle.putDouble("BMI",BMI);
                 intent.putExtras(bundle);
                 setResult(1,intent);
                 finish();
             }
         });
-        radioSex = (RadioGroup)findViewById(R.id.radioSex);
+        radioSex = (RadioGroup)findViewById(R.id.radio_Sex);
         radioSex.setOnCheckedChangeListener(radioGroupListener);
         
     }
@@ -78,15 +96,20 @@ public class InformationActivity extends AppCompatActivity {
     /**********
      save data
      **********/
-    public void savePersonalInfor(boolean sex,int age){
+    public void savePersonalInfor(boolean sex,int age,String height,String weight){
         SharedPreferences pref_infor = getSharedPreferences("PersonalInformation", MODE_PRIVATE);
         pref_infor.edit().putBoolean("sex", sex).apply();
         pref_infor.edit().putInt("age", age).apply();
+        pref_infor.edit().putString("height", height).apply();
+        pref_infor.edit().putString("weight", weight).apply();
     }
     public void loadPersonalInfor(){
         SharedPreferences pref_infor = getSharedPreferences("PersonalInformation", MODE_PRIVATE);
-        edAge.setText(String.valueOf(pref_infor.getInt("age",0)));
+        etAge.setText(String.valueOf(pref_infor.getInt("age",0)));
         setRadioSex(pref_infor.getBoolean("sex",false));
+        etHeight.setText(pref_infor.getString("height","0"));
+        etWeight.setText(pref_infor.getString("weight","0"));
+
     }
     @Override
     protected void onStart() {

@@ -9,11 +9,11 @@
     tools:context=".InformationActivity">
 
     <TextView
-        android:id="@+id/tvSex"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/tv_Sex"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
         android:layout_marginStart="48dp"
-        android:layout_marginTop="167dp"
+        android:layout_marginTop="92dp"
         android:text="@string/sex"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -21,37 +21,37 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvAge"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/tv_Age"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
         android:layout_marginStart="48dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="56dp"
         android:text="@string/age"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvSex" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_Sex" />
 
     <EditText
-        android:id="@+id/etAge"
+        android:id="@+id/et_Age"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="48dp"
         android:background="@drawable/editsharp"
         android:ems="10"
         android:inputType="number"
-        app:layout_constraintStart_toEndOf="@+id/tvAge"
-        app:layout_constraintTop_toBottomOf="@+id/radioSex" />
+        app:layout_constraintStart_toEndOf="@+id/tv_Age"
+        app:layout_constraintTop_toBottomOf="@+id/radio_Sex" />
 
     <RadioGroup
-        android:id="@+id/radioSex"
+        android:id="@+id/radio_Sex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="65dp"
-        android:layout_marginTop="157dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="76dp"
         android:orientation="horizontal"
-        app:layout_constraintStart_toEndOf="@+id/tvSex"
+        app:layout_constraintStart_toEndOf="@+id/tv_Sex"
         app:layout_constraintTop_toTopOf="parent">
 
         <RadioButton
@@ -73,10 +73,59 @@
         android:id="@+id/info_apply"
         android:layout_width="wrap_content"
         android:layout_height="44dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="52dp"
         android:text="@string/apply"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.425"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etAge" />
+        app:layout_constraintTop_toBottomOf="@+id/et_weight" />
+
+    <TextView
+        android:id="@+id/tv_height"
+        android:layout_width="110dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="56dp"
+        android:text="@string/height"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_Age" />
+
+    <TextView
+        android:id="@+id/tv_weight"
+        android:layout_width="110dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="56dp"
+        android:text="@string/weight"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_height" />
+
+    <EditText
+        android:id="@+id/et_height"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/editsharp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        app:layout_constraintStart_toEndOf="@+id/tv_height"
+        app:layout_constraintTop_toBottomOf="@+id/et_Age" />
+
+    <EditText
+        android:id="@+id/et_weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/editsharp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        app:layout_constraintStart_toEndOf="@+id/tv_weight"
+        app:layout_constraintTop_toBottomOf="@+id/et_height" />
 
 </android.support.constraint.ConstraintLayout>
