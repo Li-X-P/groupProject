@@ -16,4 +16,9 @@
     <string name="ageWarning">Age cannot be empty</string>
     <string name="heightWarning">Height cannot be empty</string>
     <string name="weightWarning">Weight cannot be empty</string>
+    <string name="nightMode">Night Mode:</string>
+    <string name="storage">Storage:</string>
+    <string name="deleteReport">Delete past reports?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
