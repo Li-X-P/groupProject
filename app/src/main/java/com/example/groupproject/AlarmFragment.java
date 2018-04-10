@@ -44,7 +44,8 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
     private ImageButton alarmState;
     private boolean mode24Hour = true;
     private boolean bo_alarmState;
-    private Bundle timeSet;
+
+    private int mHour, mMinute;
 
     public AlarmFragment() {
         // Required empty public constructor
@@ -85,8 +86,9 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
         tvTime = view.findViewById(R.id.tv_time);
         btnSleeping = view.findViewById(R.id.button_sleeping);
         alarmState = view.findViewById(R.id.ib_alarmState);
-        loadTime();
         loadAlarmState();
+        loadTime();
+
 
         view.findViewById(R.id.tv_time).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,8 +102,10 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
                                 Log.d("Original", "Got clicked");
                                 //timeSet.putInt("hour",hour); //不能在这里使用，会报错
                                 //timeSet.putInt("minute",minute);
-                                showTime(hour,minute);
-                                saveTime(hour,minute);
+                                mHour = hour;
+                                mMinute = minute;
+                                showTime(mHour,mMinute);
+                                saveTime(mHour,mMinute);
                             }
                         },
                         now.get(Calendar.HOUR_OF_DAY),
@@ -114,7 +118,10 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
             @Override
             public void onClick(View v) {
                 Intent goSleeping = new Intent(getActivity(),AboutActivity.class);
-                //goSleeping.putExtras(timeSet);
+                Bundle timeSet = new Bundle();
+                timeSet.putInt("hour",mHour);
+                timeSet.putInt("minute",mMinute);
+                goSleeping.putExtras(timeSet);
                 startActivity(goSleeping);
             }
         });
@@ -123,9 +130,14 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
             public void onClick(View v) {
                 if(bo_alarmState){
                     alarmState.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_closealarm));
+                    tvTime.setText("Alarm is closed");
+                    btnSleeping.setEnabled(false);
                     bo_alarmState = false;
+
                 }else{
                     alarmState.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_openalarm));
+                    showTime(mHour,mMinute);
+                    btnSleeping.setEnabled(true);
                     bo_alarmState = true;
                 }
                 saveAlarmState(bo_alarmState);
@@ -193,8 +205,14 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
     }
     public void loadTime(){
         SharedPreferences saveTime = this.getActivity().getSharedPreferences("Time", Context.MODE_PRIVATE);
-        tvTime.setText(String.valueOf(saveTime.getInt("hour",0))+":"
-                +String.valueOf(saveTime.getInt("minute",0)));
+        mHour = saveTime.getInt("hour",0);
+        mMinute = saveTime.getInt("minute",0);
+        if(bo_alarmState) {
+            tvTime.setText((mHour < 10? String.valueOf("0"+mHour):String.valueOf(""+mHour))+ ":"
+                    +(mMinute<10? String.valueOf("0"+mMinute): String.valueOf(""+mMinute)));
+        }else{
+            tvTime.setText("Alarm is closed");
+        }
     }
 
     public void saveAlarmState(boolean state){
