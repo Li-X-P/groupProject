@@ -62,7 +62,7 @@ public class InformationActivity extends AppCompatActivity {
                 bundle.putDouble("BMI",BMI);
                 intent.putExtras(bundle);
                 setResult(1,intent);
-                finish();
+
             }
         });
         radioSex = (RadioGroup)findViewById(R.id.radio_Sex);
