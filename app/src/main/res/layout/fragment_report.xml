@@ -6,10 +6,17 @@
     tools:context=".ReportFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:textSize="60sp"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Report" />
+        android:layout_height="match_parent">
+
+
+        <com.example.groupproject.PieChatView
+            android:id="@+id/pie"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="80dp"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
 
 </FrameLayout>

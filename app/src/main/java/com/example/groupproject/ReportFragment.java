@@ -1,12 +1,17 @@
 package com.example.groupproject;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Random;
 
 
 /**
@@ -28,6 +33,8 @@ public class ReportFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private LinkedHashMap kindsMap = new LinkedHashMap<String, Integer>();
+    private ArrayList<Integer> colors = new ArrayList<>();
 
     public ReportFragment() {
         // Required empty public constructor
@@ -64,7 +71,31 @@ public class ReportFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_report, container, false);
+        View view = inflater.inflate(R.layout.fragment_report, container, false);
+        //Bundle bundle = getIntent().getExtras();
+        int deep = 5;//bundle.getInt("deepsleep");
+        int light = 6;//bundle.getInt("lightsleep");
+        int awake = 9;//bundle.getInt("awaketime");
+        PieChatView pieChatView = view.findViewById(R.id.pie);
+        kindsMap.put("Deep sleep", deep);
+        kindsMap.put("Light sleep", light);
+        kindsMap.put("Awake", awake);
+
+        for (int i = 1; i <= 40; i++){
+            int r= (new Random().nextInt(100)+10)*i;
+            int g= (new Random().nextInt(100)+10)*3*i;
+            int b= (new Random().nextInt(100)+10)*2*i;
+            int color = Color.rgb(r,g,b);
+            if(Math.abs(r-g)>10 && Math.abs(r-b)>10 && Math.abs(b-g)>10){
+                colors.add(color);
+            }
+        }
+        pieChatView.setCenterTitle("Sleep cycle");
+        pieChatView.setDataMap(kindsMap);
+        pieChatView.setColors(colors);
+        pieChatView.setMinAngle(50);
+        pieChatView.startDraw();
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

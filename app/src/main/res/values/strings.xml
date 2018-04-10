@@ -22,4 +22,8 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="sleep">Sleep</string>
+    <string name="get_up">Get up now</string>
+    <string name="get_up_warning">Are you sure to get up now?</string>
+    <string name="get_up_yes">Yes</string>
+    <string name="get_up_no">No</string>
 </resources>

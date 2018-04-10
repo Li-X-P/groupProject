@@ -117,10 +117,11 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
         btnSleeping.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent goSleeping = new Intent(getActivity(),AboutActivity.class);
+                Intent goSleeping = new Intent(getActivity(),SleepActivity.class);
                 Bundle timeSet = new Bundle();
                 timeSet.putInt("hour",mHour);
                 timeSet.putInt("minute",mMinute);
+                timeSet.putInt("Duration",30);
                 goSleeping.putExtras(timeSet);
                 startActivity(goSleeping);
             }
