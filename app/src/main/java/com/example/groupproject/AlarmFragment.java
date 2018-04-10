@@ -1,12 +1,23 @@
 package com.example.groupproject;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.TimePicker;
+
+import java.util.Calendar;
 
 
 /**
@@ -17,7 +28,7 @@ import android.view.ViewGroup;
  * Use the {@link AlarmFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AlarmFragment extends Fragment {
+public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSetListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -28,6 +39,12 @@ public class AlarmFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private TextView tvTime;
+    private Button btnSleeping;
+    private ImageButton alarmState;
+    private boolean mode24Hour = true;
+    private boolean bo_alarmState;
+    private Bundle timeSet;
 
     public AlarmFragment() {
         // Required empty public constructor
@@ -64,7 +81,65 @@ public class AlarmFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_alarm, container, false);
+        View view = inflater.inflate(R.layout.fragment_alarm, container, false);
+        tvTime = view.findViewById(R.id.tv_time);
+        btnSleeping = view.findViewById(R.id.button_sleeping);
+        alarmState = view.findViewById(R.id.ib_alarmState);
+        loadTime();
+        loadAlarmState();
+
+        view.findViewById(R.id.tv_time).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar now = Calendar.getInstance();
+                new android.app.TimePickerDialog(
+                        getActivity(),
+                        new android.app.TimePickerDialog.OnTimeSetListener(){
+                            @Override
+                            public void onTimeSet(TimePicker view, int hour, int minute) {
+                                Log.d("Original", "Got clicked");
+                                //timeSet.putInt("hour",hour); //不能在这里使用，会报错
+                                //timeSet.putInt("minute",minute);
+                                showTime(hour,minute);
+                                saveTime(hour,minute);
+                            }
+                        },
+                        now.get(Calendar.HOUR_OF_DAY),
+                        now.get(Calendar.MINUTE),
+                        mode24Hour
+                ).show();
+            }
+        });
+        btnSleeping.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goSleeping = new Intent(getActivity(),AboutActivity.class);
+                //goSleeping.putExtras(timeSet);
+                startActivity(goSleeping);
+            }
+        });
+        alarmState.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(bo_alarmState){
+                    alarmState.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_closealarm));
+                    bo_alarmState = false;
+                }else{
+                    alarmState.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_openalarm));
+                    bo_alarmState = true;
+                }
+                saveAlarmState(bo_alarmState);
+            }
+        });
+        return view;
+
+    }
+
+    public void showTime( int hourOfDay, int minute) {
+        String hourString = hourOfDay < 10 ? "0"+hourOfDay : ""+hourOfDay;
+        String minuteString = minute < 10 ? "0"+minute : ""+minute;
+        String time = hourString+":"+minuteString;
+        tvTime.setText(time);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -86,6 +161,14 @@ public class AlarmFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        String hourString = hourOfDay < 10 ? "0"+hourOfDay : ""+hourOfDay;
+        String minuteString = minute < 10 ? "0"+minute : ""+minute;
+        String time = hourString+"h"+minuteString+"m";
+        tvTime.setText(time);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -100,4 +183,33 @@ public class AlarmFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+    /**********
+     save data
+     **********/
+    public void saveTime(int hour,int minute){
+        SharedPreferences saveTime = this.getActivity().getSharedPreferences("Time", Context.MODE_PRIVATE);
+        saveTime.edit().putInt("hour", hour).apply();
+        saveTime.edit().putInt("minute", minute).apply();
+    }
+    public void loadTime(){
+        SharedPreferences saveTime = this.getActivity().getSharedPreferences("Time", Context.MODE_PRIVATE);
+        tvTime.setText(String.valueOf(saveTime.getInt("hour",0))+":"
+                +String.valueOf(saveTime.getInt("minute",0)));
+    }
+
+    public void saveAlarmState(boolean state){
+        SharedPreferences saveAlarmState = this.getActivity().getSharedPreferences("AlarmState", Context.MODE_PRIVATE);
+        saveAlarmState.edit().putBoolean("state", state).apply();
+    }
+    public void loadAlarmState(){
+        SharedPreferences saveAlarmState = this.getActivity().getSharedPreferences("AlarmState", Context.MODE_PRIVATE);
+        if(saveAlarmState.getBoolean("state",true)){
+            bo_alarmState = saveAlarmState.getBoolean("state",true);
+            alarmState.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_openalarm));
+        }else{
+            bo_alarmState = saveAlarmState.getBoolean("state",true);
+            alarmState.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_closealarm));
+        }
+    }
+
 }

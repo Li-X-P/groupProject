@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+    /*
+    动态切换Item图标
+     */
 /*    @Override
     public boolean onPrepareOptionsMenu(Menu menu){
         if (nightMode) {
@@ -199,7 +202,7 @@ public class MainActivity extends AppCompatActivity
     }
     public void loadPersonalNightMode(){
         SharedPreferences pref_infor = getSharedPreferences("NightMode", MODE_PRIVATE);
-        nightMode = pref_infor.getBoolean("nightMode",false);
+        nightMode = pref_infor.getBoolean("nightMode",true);
         if(nightMode){
             getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);//切换日间模式
         }else{
