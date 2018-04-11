@@ -87,12 +87,12 @@ public class SleepActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sleep);
+        setTitle("Sleeping");
         verifyPermissions(SleepActivity.this);
         Bundle goSleeping= getIntent().getExtras();
         mHour = goSleeping.getInt("hour");
         mMinute = goSleeping.getInt("minute");
         mDuration = goSleeping.getInt("Duration");
-
 
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         linlayContent = (LinearLayout) findViewById(R.id.linlay_content);
@@ -101,7 +101,9 @@ public class SleepActivity extends AppCompatActivity {
         imageView.setImageResource(R.drawable.wake_up);
         Uri uri = Uri.parse("android.resource://"+ getPackageName()+"/"+ R.raw.fakereal);
         mediaPlayer = MediaPlayer.create(getApplicationContext(),uri);
-        reportbutton = (Button)findViewById(R.id.button4);
+        StartSleep();
+
+/*        reportbutton = (Button)findViewById(R.id.button4);
         reportbutton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -109,16 +111,16 @@ public class SleepActivity extends AppCompatActivity {
                     Toast.makeText(SleepActivity.this, "You are awake now!",
                             Toast.LENGTH_LONG).show();
                 }else{
-                    /*Intent intent = new Intent (SleepActivity.this, ReportActivity.class);
+                    *//*Intent intent = new Intent (SleepActivity.this, ReportActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putInt("awaketime",awake);
                     bundle.putInt("lightsleep", light_sleep);
                     bundle.putInt("deepsleep", deep_sleep);
                     intent.putExtras(bundle);
-                    startActivity(intent);*/
+                    startActivity(intent);*//*
                 }
             }
-        });
+        });*/
     }
 
     //click on the test button
@@ -148,7 +150,7 @@ public class SleepActivity extends AppCompatActivity {
         }
     }
     // click on the start button
-    public void StartSleep(View view){
+    public void StartSleep(){
         if(isSleepingNow == false){
             isSleepingNow = true;
             linlayContent.addView(createTextView("You are now in the sleeping mode...", linLayParams));

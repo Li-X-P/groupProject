@@ -11,9 +11,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -31,6 +33,7 @@ import java.util.Calendar;
 public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSetListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String TAG = "TitlesFragment";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -71,6 +74,7 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, getClass().getSimpleName() + ":entered onCreate()");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -82,6 +86,7 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.i(TAG, getClass().getSimpleName() + ":entered onCreateView()");
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
         tvTime = view.findViewById(R.id.tv_time);
         btnSleeping = view.findViewById(R.id.button_sleeping);
@@ -166,14 +171,60 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
 
     @Override
     public void onAttach(Context context) {
+        Log.i(TAG, getClass().getSimpleName() + ":entered onAttach()");
         super.onAttach(context);
+    }
 
+
+    @Override
+    public void onActivityCreated(Bundle savedState) {
+        Log.i(TAG, getClass().getSimpleName() + ":entered onActivityCreated()");
+        super.onActivityCreated(savedState);
+
+        // Set the list adapter for the ListView
+        // Discussed in more detail in the user interface classes lesson
+    }
+
+    @Override
+    public void onStart() {
+        Log.i(TAG, getClass().getSimpleName() + ":entered onStart()");
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        Log.i(TAG, getClass().getSimpleName() + ":entered onResume()");
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        Log.i(TAG, getClass().getSimpleName() + ":entered onPause()");
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        Log.i(TAG, getClass().getSimpleName() + ":entered onStop()");
+        super.onStop();
     }
 
     @Override
     public void onDetach() {
+        Log.i(TAG, getClass().getSimpleName() + ":entered onDetach()");
         super.onDetach();
-        mListener = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.i(TAG, getClass().getSimpleName() + ":entered onDestroy()");
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.i(TAG, getClass().getSimpleName() + ":entered onDestroyView()");
+        super.onDestroyView();
     }
 
     @Override

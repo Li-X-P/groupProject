@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity
     private int lastShowFragment = 0;
     private Bundle information = new Bundle();
     private boolean nightMode;
+    private Bundle sleepTime;
 
 
     @Override
@@ -48,6 +49,10 @@ public class MainActivity extends AppCompatActivity
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        sleepTime = new Bundle();
+        sleepTime.putInt("deepsleep",0);
+        sleepTime.putInt("lightsleep",0);
+        sleepTime.putInt("awaketime",0);
         initFragments();
 
 
@@ -104,7 +109,18 @@ public class MainActivity extends AppCompatActivity
         if (!fragments[index].isAdded()) {
             transaction.add(R.id.fragment_container, fragments[index]);
         }
-        transaction.show(fragments[index]).commitAllowingStateLoss();
+        if(index == 1){
+            Bundle bundle = new Bundle();
+            bundle.putInt("deepsleep",10);
+            bundle.putInt("lightsleep",10);
+            bundle.putInt("awaketime",10);
+            fragmentReport.setArguments(sleepTime);
+            transaction.show(fragments[index]).commitAllowingStateLoss();
+        }else{
+            transaction.show(fragments[index]).commitAllowingStateLoss();
+        }
+
+
     }
     private void initFragments() {
         fragmentAlarm = new AlarmFragment();
@@ -116,6 +132,11 @@ public class MainActivity extends AppCompatActivity
                 .add(R.id.fragment_container, fragmentAlarm)
                 .show(fragmentAlarm)
                 .commit();
+/*        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container, fragmentReport)
+                .hide(fragmentReport)
+                .commit();*/
     }
 
     /*
@@ -194,11 +215,13 @@ public class MainActivity extends AppCompatActivity
         if(requestCode == 2){
             switch (resultCode){
                 case 2:{
-                    Bundle sleepTime = data.getExtras();
+                    sleepTime = data.getExtras();
                     int deep = sleepTime.getInt("deepsleep");
-                    int light = sleepTime.getInt("lightsleep");
+                    int light =sleepTime.getInt("lightsleep");
                     int awake = sleepTime.getInt("awaketime");
-                    System.out.println(String.valueOf(deep)+" "+String.valueOf(light)+" "+String.valueOf(awake));
+                    sleepTime.putInt("deepsleep",deep);
+                    sleepTime.putInt("lightsleep",light);
+                    sleepTime.putInt("awaketime",awake);
                 }
             }
         }
