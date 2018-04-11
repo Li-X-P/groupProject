@@ -8,6 +8,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,6 +21,9 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 import java.util.HashMap;
+import com.example.groupproject.ReportFragment;
+import com.example.groupproject.AlarmFragment;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     private Bundle information = new Bundle();
     private boolean nightMode;
     private Bundle sleepTime;
+    private int mDeep = 0,mLight = 0,mAwake = 0;
 
 
     @Override
@@ -49,13 +54,23 @@ public class MainActivity extends AppCompatActivity
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        loadSleepData();
         sleepTime = new Bundle();
-        sleepTime.putInt("deepsleep",0);
-        sleepTime.putInt("lightsleep",0);
-        sleepTime.putInt("awaketime",0);
-        initFragments();
+        sleepTime.putInt("deepsleep",mDeep);
+        sleepTime.putInt("lightsleep",mLight);
+        sleepTime.putInt("awaketime",mAwake);
+        setSelection(0);
 
+    }
+    @Override
+    public void onAttachFragment(Fragment fragment){
 
+        //当前的界面的保存状态，只是重新让新的Fragment指向了原本未被销毁的fragment，它就是onAttach方法对应的Fragment对象
+        if(fragmentAlarm == null && fragment instanceof AlarmFragment){
+            fragmentAlarm = (AlarmFragment)fragment;
+        }else if(fragmentReport == null && fragment instanceof ReportFragment){
+            fragmentReport = (ReportFragment)fragment;
+        }
     }
     /*
     动态切换Item图标
@@ -86,57 +101,55 @@ public class MainActivity extends AppCompatActivity
             Class fragmentClass;
             switch (item.getItemId()) {
                 case R.id.nav_alarm:
-                    if (lastShowFragment != 0) {
-                        switchFragment(lastShowFragment, 0);
-                        lastShowFragment = 0;
-                    }
+                    setSelection(0);
                     return true;
                 case R.id.nav_report:
-                    if (lastShowFragment != 1) {
-                        switchFragment(lastShowFragment, 1);
-                        lastShowFragment = 1;
-                    }
+                    setSelection(1);
                     return true;
-                default:
-                    fragmentClass = AlarmFragment.class;
             }
             return false;
         }
     };
-    public void switchFragment(int lastIndex,int index){
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.hide(fragments[lastIndex]);
-        if (!fragments[index].isAdded()) {
-            transaction.add(R.id.fragment_container, fragments[index]);
-        }
-        if(index == 1){
-            Bundle bundle = new Bundle();
-            bundle.putInt("deepsleep",10);
-            bundle.putInt("lightsleep",10);
-            bundle.putInt("awaketime",10);
-            fragmentReport.setArguments(sleepTime);
-            transaction.show(fragments[index]).commitAllowingStateLoss();
-        }else{
-            transaction.show(fragments[index]).commitAllowingStateLoss();
-        }
 
+    private void setSelection(int position){
 
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction mfragmentTransaction = fm.beginTransaction();
+        hideAllFragments(mfragmentTransaction);
+
+        switch (position){
+            case 0:
+                if (fragmentAlarm == null) {
+                    fragmentAlarm = new AlarmFragment();
+                    mfragmentTransaction.add(R.id.fragment_container, fragmentAlarm);
+                }else {
+                    mfragmentTransaction.show(fragmentAlarm);
+                }
+                break;
+            case 1:
+                if (fragmentReport == null) {
+                    fragmentReport = new ReportFragment();
+                    fragmentReport.setArguments(sleepTime);
+                    mfragmentTransaction.add(R.id.fragment_container, fragmentReport);
+                }else {
+                    fragmentReport.setArguments(sleepTime);
+                    mfragmentTransaction.show(fragmentReport);
+                }
+                break;
+            default:
+                break;
+        }
+        mfragmentTransaction.commit();
     }
-    private void initFragments() {
-        fragmentAlarm = new AlarmFragment();
-        fragmentReport = new ReportFragment();
-        fragments = new Fragment[]{fragmentAlarm, fragmentReport};
-        lastShowFragment = 0;
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_container, fragmentAlarm)
-                .show(fragmentAlarm)
-                .commit();
-/*        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_container, fragmentReport)
-                .hide(fragmentReport)
-                .commit();*/
+
+    private void hideAllFragments(FragmentTransaction ft){
+
+        if (fragmentAlarm != null) {
+            ft.hide(fragmentAlarm);
+        }
+        if (fragmentReport != null) {
+            ft.hide(fragmentReport);
+        }
     }
 
     /*
@@ -222,6 +235,7 @@ public class MainActivity extends AppCompatActivity
                     sleepTime.putInt("deepsleep",deep);
                     sleepTime.putInt("lightsleep",light);
                     sleepTime.putInt("awaketime",awake);
+                    saveSleepData(deep,light,awake);
                 }
             }
         }
@@ -242,7 +256,20 @@ public class MainActivity extends AppCompatActivity
         }else{
             getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);//切换夜间模式
         }
+    }
 
+    public void saveSleepData(int mDeep,int mLight,int mAwake){
+        SharedPreferences pref_SleepData = getSharedPreferences("SleepData", MODE_PRIVATE);
+        pref_SleepData.edit().putInt("mDeep", mDeep).apply();
+        pref_SleepData.edit().putInt("mLight", mLight).apply();
+        pref_SleepData.edit().putInt("mAwake", mAwake).apply();
+
+    }
+    public void loadSleepData(){
+        SharedPreferences pref_SleepData = getSharedPreferences("SleepData", MODE_PRIVATE);
+        mDeep = pref_SleepData.getInt("mDeep",0);
+        mLight = pref_SleepData.getInt("mLight",0);
+        mAwake = pref_SleepData.getInt("mAwake",0);
 
     }
     @Override

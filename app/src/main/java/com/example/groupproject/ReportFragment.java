@@ -75,7 +75,7 @@ public class ReportFragment extends Fragment {
                     int light = bundle.getInt("lightsleep");
                     int awake = bundle.getInt("awaketime");
                  if((deep == 0)&&(light == 0)&&(awake == 0)){
-                     Toast.makeText(getActivity(), "There is no data!", Toast.LENGTH_LONG).show();
+                     Toast.makeText(getActivity(), "There are no data!", Toast.LENGTH_LONG).show();
                  }else {
                      if((mDeep == deep)&&(mLight == light)&&(mAwake == awake)) {
                          Toast.makeText(getActivity(), "The data are not changed!", Toast.LENGTH_LONG).show();
@@ -127,7 +127,7 @@ public class ReportFragment extends Fragment {
         mLight = mBundle.getInt("lightsleep");
         mAwake = mBundle.getInt("awaketime");
         if((mDeep == 0)&&(mLight == 0)&&(mAwake == 0)){
-            Toast.makeText(getActivity(), "There is no data!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "There are no data!", Toast.LENGTH_LONG).show();
         }else{
             drawPie(mDeep,mLight,mAwake);
             if_drawPie =true;
