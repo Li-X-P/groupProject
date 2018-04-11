@@ -191,6 +191,17 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
+        if(requestCode == 2){
+            switch (resultCode){
+                case 2:{
+                    Bundle sleepTime = data.getExtras();
+                    int deep = sleepTime.getInt("deepsleep");
+                    int light = sleepTime.getInt("lightsleep");
+                    int awake = sleepTime.getInt("awaketime");
+                    System.out.println(String.valueOf(deep)+" "+String.valueOf(light)+" "+String.valueOf(awake));
+                }
+            }
+        }
     }
     /**********
      save nightMode

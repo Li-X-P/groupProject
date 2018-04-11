@@ -198,6 +198,15 @@ public class SleepActivity extends AppCompatActivity {
                             linlayContent.addView(createTextView("Total light sleeping time: "+String.valueOf(light_sleep), linLayParams));
                             linlayContent.addView(createTextView("Total awake time: "+String.valueOf(awake), linLayParams));
                             scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+
+                            Intent intent = new Intent (SleepActivity.this,MainActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("awaketime",awake);
+                            bundle.putInt("lightsleep", light_sleep);
+                            bundle.putInt("deepsleep", deep_sleep);
+                            intent.putExtras(bundle);
+                            SleepActivity.this.setResult(2,intent);
+                            finish();
                         }
                     });
             builder.setNegativeButton(R.string.get_up_no,
@@ -208,7 +217,9 @@ public class SleepActivity extends AppCompatActivity {
                     });
             builder.create();
             builder.show();
+
         }
+
     }
 
     private void display(double voice, LinearLayout.LayoutParams linLayParams) {
