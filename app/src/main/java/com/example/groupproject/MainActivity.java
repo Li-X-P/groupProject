@@ -18,7 +18,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import java.util.HashMap;
 import com.example.groupproject.ReportFragment;
@@ -31,10 +34,11 @@ public class MainActivity extends AppCompatActivity
     private ActionBarDrawerToggle mToggle;
     private AlarmFragment fragmentAlarm;
     private ReportFragment fragmentReport;
-    private Fragment[] fragments;
-    private int lastShowFragment = 0;
+    private ImageView userIcon;
+    private TextView userName;
+    private String mUserName;
     private Bundle information = new Bundle();
-    private boolean nightMode;
+    private boolean nightMode, isLogin;
     private Bundle sleepTime;
     private int mDeep = 0,mLight = 0,mAwake = 0;
 
@@ -44,6 +48,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("Home");
+
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer);
         mToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.drawerOpen,R.string.drawerClose);
         mDrawerLayout.addDrawerListener(mToggle);
@@ -51,6 +56,20 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        View headerView = navigationView.getHeaderView(0);
+        userIcon = (ImageView)headerView.findViewById(R.id.user_icon);
+        userName = (TextView) headerView.findViewById(R.id.user_name);
+        userIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent login = new Intent(MainActivity.this,LoginActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("isLogin",isLogin);
+                login.putExtras(bundle);
+                startActivityForResult(login,1);
+            }
+        });
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -220,11 +239,23 @@ public class MainActivity extends AppCompatActivity
                     }
                     information.putInt("age", age);
                     information.putDouble("BMI", BMI);
-                    System.out.println(information);
-
+                    //System.out.println(information);
+                }
+                case 2:{
+                    Bundle loginState = data.getExtras();
+                    isLogin = loginState.getBoolean("isLogin");
+                    saveLoginState(isLogin,loginState.getString("userName"));
+                    if(isLogin){
+                        userIcon.setImageResource(R.mipmap.ic_head);
+                        userName.setText(loginState.getString("userName"));
+                    }else{
+                        userIcon.setImageResource(R.mipmap.ic_launcher);
+                        userName.setText(loginState.getString("userName"));
+                    }
                 }
             }
         }
+        //requestCode == 2 是从AlarmFragment 请求的
         if(requestCode == 2){
             switch (resultCode){
                 case 2:{
@@ -272,8 +303,26 @@ public class MainActivity extends AppCompatActivity
         mAwake = pref_SleepData.getInt("mAwake",0);
 
     }
+    public void saveLoginState(boolean isLogin,String userName){
+        SharedPreferences pref_loginState = getSharedPreferences("LoginState", MODE_PRIVATE);
+        pref_loginState.edit().putBoolean("loginState",isLogin).apply();
+        pref_loginState.edit().putString("userName",userName).apply();
+    }
+    public void loadLoginState(){
+        SharedPreferences pref_loginState = getSharedPreferences("LoginState", MODE_PRIVATE);
+        isLogin = pref_loginState.getBoolean("loginState",false);
+        mUserName = pref_loginState.getString("userName","user name");
+        if(isLogin){
+            userIcon.setImageResource(R.mipmap.ic_head);
+            userName.setText(mUserName);
+        }else{
+            userIcon.setImageResource(R.mipmap.ic_launcher);
+            userName.setText(mUserName);
+        }
+    }
     @Override
     protected void onStart() {
         super.onStart();
+        loadLoginState();
         loadPersonalNightMode();}
 }

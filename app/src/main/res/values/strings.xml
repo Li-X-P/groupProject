@@ -26,7 +26,15 @@
     <string name="get_up_warning">Are you sure to get up now?</string>
     <string name="get_up_yes">Yes</string>
     <string name="get_up_no">No</string>
-    <string name= "email"><u>xiaopenli4-c@my.cityu.edu.cn</u></string>>
+    <string name="email"><u>xiaopenli4-c@my.cityu.edu.cn</u></string>
+    >
     <string name="mail_subject">Feed back about the App</string>
     <string name="mail_content">If you have any suggestion or find any bug, please tell me for improvement. Thank you!</string>
+
+    <string-array name="SecurityQuestion">
+        <item>My phone number</item>
+        <item>My student ID</item>
+        <item>My hometown</item>
+        <item>My birthday</item>
+    </string-array>
 </resources>
