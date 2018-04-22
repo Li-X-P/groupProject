@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".LoginActivity">
 
     <TextView
@@ -12,8 +13,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Sleep better and wake easier"
-        android:textSize="20sp"
+        android:text="Sleep Better and Wake Easier"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +29,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:text="Welcome to use !"
+        android:textColor="@color/black"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,10 +41,12 @@
         android:id="@+id/Account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="70dp"
         android:text="Account:"
+        android:textColor="@color/black"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Welcome" />
 
@@ -47,7 +55,7 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
-        android:layout_marginTop="41dp"
+        android:layout_marginTop="70dp"
         android:background="@drawable/editsharp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Welcome" />
@@ -59,7 +67,9 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="36dp"
         android:text="Password:"
+        android:textColor="@color/black"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Account" />
 
@@ -76,33 +86,67 @@
 
     <Button
         android:id="@+id/CreatBtn"
-        android:layout_width="184dp"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button3"
         android:text="Creat a new account"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.584"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/LogBtn" />
 
     <Button
         android:id="@+id/ForgetBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="35dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button2"
         android:text="Forgot my password"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LogBtn" />
+        app:layout_constraintHorizontal_bias="0.584"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CreatBtn" />
 
     <Button
         android:id="@+id/LogBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:text="log in"
+        android:layout_width="250dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/button1"
+        android:text="Log in"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.57"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ET_password" />
+
+    <ImageView
+        android:id="@+id/imageView10"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:onClick="buttonLogin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ForgetBtn"
+        app:srcCompat="@drawable/qq_icon" />
 
 </android.support.constraint.ConstraintLayout>

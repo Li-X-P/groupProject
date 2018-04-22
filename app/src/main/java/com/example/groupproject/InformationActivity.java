@@ -1,6 +1,8 @@
 package com.example.groupproject;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.provider.MediaStore;
@@ -16,9 +18,10 @@ import android.widget.Toast;
 public class InformationActivity extends AppCompatActivity {
 
     boolean sex;
-    int age;
+    int age,age_index;
     double height;
     double weight;
+    String[] ageTips;
     EditText etAge;
     EditText etHeight;
     EditText etWeight;
@@ -30,6 +33,7 @@ public class InformationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_information);
         setTitle("Personal Information");
 
+        ageTips = getResources().getStringArray(R.array.ageTips);
         etAge = (EditText)findViewById(R.id.et_Age);
         etHeight = (EditText)findViewById(R.id.et_height);
         etWeight = (EditText)findViewById(R.id.et_weight);
@@ -55,6 +59,20 @@ public class InformationActivity extends AppCompatActivity {
                 savePersonalInfor(sex,age,etHeight.getText().toString(),etWeight.getText().toString());
                 double BMI = weight /((height/100)*(height/100));
 
+                if(age == 0){
+                    age_index = 0;
+                } else if(age<=3){
+                    age_index = 1;
+                }else if(age<=12){
+                    age_index = 2;
+                }else if(age<=29){
+                    age_index = 3;
+                }else if(age<=60){
+                    age_index = 4;
+                }else{
+                    age_index = 5;
+                }
+
                 Intent intent = new Intent();
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("sex",sex);
@@ -62,6 +80,20 @@ public class InformationActivity extends AppCompatActivity {
                 bundle.putDouble("BMI",BMI);
                 intent.putExtras(bundle);
                 setResult(1,intent);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(InformationActivity.this);
+                builder.setTitle("Tips");
+                builder.setMessage(ageTips[age_index]);
+                builder.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                finish();
+                            }
+                        });
+                builder.create();
+                builder.show();
 
             }
         });

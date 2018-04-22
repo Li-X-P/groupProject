@@ -138,7 +138,7 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
             public void onClick(View v) {
                 if(bo_alarmState){
                     alarmState.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_closealarm));
-                    tvTime.setText("Alarm is closed");
+                    tvTime.setText("Closed");
                     btnSleeping.setEnabled(false);
                     bo_alarmState = false;
 

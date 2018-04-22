@@ -3,25 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="160dp"
+    android:background="@drawable/headbcakground"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
         android:id="@+id/user_icon"
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
         app:srcCompat="@mipmap/ic_launcher_round" />
 
     <TextView
         android:id="@+id/user_name"
-        android:layout_marginTop="20dp"
+        style="@android:style/Widget.DeviceDefault.Light.TextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="name"
+        android:layout_height="55dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="50dp"
         android:gravity="center_horizontal"
-        android:textColor="@color/black"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:text="name"
+        android:textAlignment="textStart"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@android:color/background_light"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
 </LinearLayout>

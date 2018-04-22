@@ -3,6 +3,8 @@ package com.example.groupproject;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -20,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,12 +43,13 @@ public class MainActivity extends AppCompatActivity
     private Bundle information = new Bundle();
     private boolean nightMode, isLogin;
     private Bundle sleepTime;
-    private int mDeep = 0,mLight = 0,mAwake = 0;
+    private int mDeep = 0,mLight = 0,mAwake = 0,soundIndex;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         setTitle("Home");
 
@@ -249,9 +253,15 @@ public class MainActivity extends AppCompatActivity
                         userIcon.setImageResource(R.mipmap.ic_head);
                         userName.setText(loginState.getString("userName"));
                     }else{
-                        userIcon.setImageResource(R.mipmap.ic_launcher);
+                        userIcon.setImageResource(R.drawable.ic_launcher);
                         userName.setText(loginState.getString("userName"));
                     }
+                }
+                case 3:{
+
+                    Bundle soundSelect = data.getExtras();
+                    soundIndex = soundSelect.getInt("index");
+                    saveSound(soundIndex);
                 }
             }
         }
@@ -316,13 +326,23 @@ public class MainActivity extends AppCompatActivity
             userIcon.setImageResource(R.mipmap.ic_head);
             userName.setText(mUserName);
         }else{
-            userIcon.setImageResource(R.mipmap.ic_launcher);
+            userIcon.setImageResource(R.drawable.ic_launcher);
             userName.setText(mUserName);
         }
+    }
+    public void saveSound( int Index) {
+        SharedPreferences pref = getSharedPreferences("sound_main", MODE_PRIVATE);
+        pref.edit().putInt("Index",Index).apply();
+    }
+    public void loadSound() {
+        SharedPreferences pref = getSharedPreferences("sound_main", MODE_PRIVATE);
+        soundIndex = pref.getInt("Index", 0);
+
     }
     @Override
     protected void onStart() {
         super.onStart();
         loadLoginState();
-        loadPersonalNightMode();}
+        loadPersonalNightMode();
+    }
 }

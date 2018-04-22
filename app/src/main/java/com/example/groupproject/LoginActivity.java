@@ -4,10 +4,25 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.tencent.connect.UserInfo;
+import com.tencent.connect.auth.QQToken;
+import com.tencent.connect.common.Constants;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -15,26 +30,45 @@ public class LoginActivity extends AppCompatActivity {
     Button CreateButton;
     Button ForgetButton;
     Button LoginButton, LogoutButton;
-    private boolean isAccount, isPassword,isLgoin;
+    private boolean isAccount, isPassword,isLogin, isQQ;
     DatabaseHelper userDb;
     EditText mET_password, mET_account;
 
+    private static final String TAG = "MainActivity";
+    private static final String APP_ID = "1106857284";//官方获取的APPID
+    private Tencent mTencent;
+    private BaseUiListener mIUiListener;
+    private UserInfo mUserInfo;
+    private ImageView head;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mTencent = Tencent.createInstance(APP_ID,LoginActivity.this.getApplicationContext());
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
         setTitle("Login");
+
+        DisplayImageOptions op=new DisplayImageOptions.Builder().build();
+        ImageLoaderConfiguration con=new ImageLoaderConfiguration.Builder(this)
+                .defaultDisplayImageOptions(op)
+                .build();
+        ImageLoader.getInstance().init(con);
+
         if(bundle.getBoolean("isLogin")) {
             setContentView(R.layout.activity_haslogin);
+            head = (ImageView) findViewById(R.id.imageView3);
             System.out.println("true");
             LogoutButton = (Button)findViewById(R.id.logout);
+
             LogoutButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    isLgoin = false;
+                    isLogin = false;
+                    isQQ = false;
+                    mTencent.logout(LoginActivity.this);
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
-                    bundle.putBoolean("isLogin",isLgoin);
+                    bundle.putBoolean("isLogin",isLogin);
                     bundle.putString("userName","user name");
                     intent.putExtras(bundle);
                     setResult(2,intent);
@@ -107,10 +141,10 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             String putPassword = mET_password.getText().toString();
                             if(putPassword.equals(getPassword)){
-                                isLgoin = true;
+                                isLogin = true;
                                 Intent intent = new Intent();
                                 Bundle bundle = new Bundle();
-                                bundle.putBoolean("isLogin",isLgoin);
+                                bundle.putBoolean("isLogin",isLogin);
                                 bundle.putString("userName",getUserName);
                                 intent.putExtras(bundle);
                                 setResult(2,intent);
@@ -139,10 +173,100 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+
+    /**
+     * 自定义监听器实现IUiListener接口后，需要实现的3个方法
+     * onComplete完成 onError错误 onCancel取消
+     */
+    private class BaseUiListener implements IUiListener {
+
+        @Override
+        public void onComplete(Object response) {
+            Toast.makeText(LoginActivity.this, "Log in successfully!", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "response:" + response);
+            JSONObject obj = (JSONObject) response;
+            try {
+                String openID = obj.getString("openid");
+                String accessToken = obj.getString("access_token");
+                String expires = obj.getString("expires_in");
+                mTencent.setOpenId(openID);
+                mTencent.setAccessToken(accessToken,expires);
+                QQToken qqToken = mTencent.getQQToken();
+                mUserInfo = new UserInfo(getApplicationContext(),qqToken);
+                mUserInfo.getUserInfo(new IUiListener() {
+                    @Override
+                    public void onComplete(Object response) {
+
+                        isLogin = true;
+                        isQQ = true;
+                        Log.e(TAG,"登录成功"+response.toString());
+                        JSONObject oo= (JSONObject) response;
+
+                        try {
+                            String   na = oo.getString("nickname");
+                            Intent intent = new Intent();
+                            Bundle bundle = new Bundle();
+                            bundle.putBoolean("isLogin",isLogin);
+                            bundle.putString("userName",na);
+                            intent.putExtras(bundle);
+                            setResult(2,intent);
+
+                        /*    String url=oo.getString("figureurl_2");
+                            System.out.println("===解析的url"+url);
+                            ImageLoader.getInstance().displayImage(url,head);*/
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(UiError uiError) {
+                        Log.e(TAG,"登录失败"+uiError.toString());
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Log.e(TAG,"登录取消");
+
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onError(UiError uiError) {
+            Toast.makeText(LoginActivity.this, "Log in failed!", Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onCancel() {
+            Toast.makeText(LoginActivity.this, "Cancel log in by Tencent QQ", Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
+    public void buttonLogin(View v){
+        /**通过这句代码，SDK实现了QQ的登录，这个方法有三个参数，第一个参数是context上下文，第二个参数SCOPO 是一个String类型的字符串，表示一些权限
+         官方文档中的说明：应用需要获得哪些API的权限，由“，”分隔。例如：SCOPE = “get_user_info,add_t”；所有权限用“all”
+         第三个参数，是一个事件监听器，IUiListener接口的实例，这里用的是该接口的实现类 */
+
+        mIUiListener = new BaseUiListener();
+        //all表示获取所有权限
+        mTencent.login(LoginActivity.this,"all", mIUiListener);
+    }
     /*
     要想处理从其他Activity 中返回来的数据 在这里处理
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == Constants.REQUEST_LOGIN){
+            Tencent.onActivityResultData(requestCode,resultCode,data,mIUiListener);
+        }
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 3) {
             switch (resultCode) {

@@ -4,15 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".CreateUserActivity">
 
     <TextView
         android:id="@+id/TextView"
         android:layout_width="wrap_content"
-        android:layout_height="23dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="32dp"
         android:text="Creat a new account"
-        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,9 +26,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="58dp"
         android:text="Account:"
+        android:textColor="@color/black"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TextView" />
 
@@ -34,7 +39,7 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="46dp"
         android:background="@drawable/editsharp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TextView" />
@@ -46,7 +51,10 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:text="Password:"
+
         android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Account" />
 
@@ -68,6 +76,8 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:text="Repeat:"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Password" />
@@ -91,6 +101,8 @@
         android:layout_marginTop="32dp"
         android:text="Question:"
         android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/RepeatPassword" />
 
@@ -113,6 +125,8 @@
         android:layout_marginTop="32dp"
         android:text="Answer:"
         android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/SecurityQ" />
 
@@ -128,10 +142,15 @@
 
     <Button
         android:id="@+id/CreateSubBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="35dp"
         android:layout_marginTop="56dp"
-        android:text="Submit"
+        android:background="@drawable/button1"
+        android:text="Create"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ET_csqan" />

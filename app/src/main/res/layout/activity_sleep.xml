@@ -14,10 +14,9 @@
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="74dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="90dp">
+        android:layout_height="39dp"
+        android:layout_above="@+id/button3"
+        android:layout_centerHorizontal="true">
 
         <LinearLayout
             android:id="@+id/linlay_content"
@@ -45,14 +44,14 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="279dp"
+        android:layout_height="334dp"
         android:layout_above="@+id/scrollView"
         android:layout_centerHorizontal="true"
         app:srcCompat="@android:color/transparent" />
 
     <Button
         android:id="@+id/button3"
-        android:layout_width="110dp"
+        android:layout_width="250dp"
         android:layout_height="35dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
@@ -60,6 +59,8 @@
         android:background="@drawable/button"
         android:onClick="GetUp"
         android:text="Get up"
-        android:textAllCaps="false" />
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
 
 </RelativeLayout>

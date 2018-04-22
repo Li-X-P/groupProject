@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/space"
     tools:context=".AlarmFragment">
     <!-- TODO: Update blank fragment layout -->
     <android.support.constraint.ConstraintLayout
@@ -17,9 +18,16 @@
             android:id="@+id/button_sleeping"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="256dp"
+            android:layout_marginTop="188dp"
+            android:background="@android:color/transparent"
             android:text="@string/sleep"
+            android:textAllCaps="false"
+
+            android:textColor="@color/white"
+            android:textSize="36sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.709"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_time" />
 
@@ -28,7 +36,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="88dp"
-            android:textSize="50dp"
+            android:textColor="@color/white"
+            android:textSize="70dp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +50,18 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView12"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="360dp"
+            android:src="@drawable/clock"
+            app:layout_constraintEnd_toStartOf="@+id/button_sleeping"
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>

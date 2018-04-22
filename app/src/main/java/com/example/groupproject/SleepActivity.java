@@ -347,7 +347,7 @@ public class SleepActivity extends AppCompatActivity {
                                 }else{
                                     count1 = 0;
                                 }
-                                if(count1 == 3){
+                                if(count1 == 2){
                                     isGetVoiceRun = false;
                                     mediaPlayer.start();
                                     Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
