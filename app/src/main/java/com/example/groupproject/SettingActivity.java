@@ -104,8 +104,6 @@ public class SettingActivity extends AppCompatActivity {
         });
 
     }
-
-
     private void savePreferences( int soundIndex,int rangeIndex,int musicIndex, int durationIndex) {
         SharedPreferences pref = getSharedPreferences("Preferences_setting", MODE_PRIVATE);
         pref.edit().putInt("soundIndex",soundIndex).apply();
