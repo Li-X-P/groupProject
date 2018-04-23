@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity
     private Bundle information = new Bundle();
     private boolean nightMode, isLogin;
     private Bundle sleepTime , sound;
-    private int mDeep = 0,mLight = 0,mAwake = 0,soundIndex,rangeIndex;
+    private int mDeep = 0,mLight = 0,mAwake = 0,soundIndex,rangeIndex,musicIndex,durationIndex;
 
 
     @Override
@@ -265,7 +265,9 @@ public class MainActivity extends AppCompatActivity
                     Bundle settingSelect = data.getExtras();
                     soundIndex = settingSelect.getInt("soundIndex");
                     rangeIndex = settingSelect.getInt("rangeIndex");
-                    saveSound(soundIndex,rangeIndex);
+                    musicIndex = settingSelect.getInt("musicIndex");
+                    durationIndex = settingSelect.getInt("durationIndex");
+                    saveSound(soundIndex,rangeIndex,musicIndex,durationIndex);
                 }
             }
         }
@@ -334,20 +336,24 @@ public class MainActivity extends AppCompatActivity
             userName.setText(mUserName);
         }
     }
-    public void saveSound( int soundIndex,int rangeIndex) {
+    public void saveSound( int soundIndex,int rangeIndex,int musicIndex,int durationIndex) {
         SharedPreferences pref = getSharedPreferences("setting_main", MODE_PRIVATE);
         pref.edit().putInt("soundIndex",soundIndex).apply();
         pref.edit().putInt("rangeIndex",rangeIndex).apply();
-
+        pref.edit().putInt("musicIndex",musicIndex).apply();
+        pref.edit().putInt("durationIndex",durationIndex).apply();
     }
     public void loadSound() {
         SharedPreferences pref = getSharedPreferences("setting_main", MODE_PRIVATE);
         soundIndex = pref.getInt("soundIndex", 0);
         rangeIndex = pref.getInt("rangeIndex", 2);
+        musicIndex = pref.getInt("musicIndex", 0);
+        durationIndex = pref.getInt("durationIndex", 2);
         setSoundIndex(soundIndex);
         setRangeIndex(rangeIndex);
+        setMusicIndex(musicIndex);
+        setDurationIndex(durationIndex);
 
-        //System.out.println("load  "+Integer.toString(rangeIndex));
 
     }
     @Override
@@ -368,5 +374,17 @@ public class MainActivity extends AppCompatActivity
     }
     public void setRangeIndex(int rangeIndex){
         this.rangeIndex = rangeIndex;
+    }
+    public int getMusicIndex() {
+        return musicIndex;
+    }
+    public void setMusicIndex(int musicIndex){
+        this.musicIndex = musicIndex;
+    }
+    public int getDurationIndex() {
+        return durationIndex;
+    }
+    public void setDurationIndex(int durationIndex){
+        this.durationIndex = durationIndex;
     }
 }

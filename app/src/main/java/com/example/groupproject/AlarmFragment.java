@@ -1,11 +1,14 @@
 package com.example.groupproject;
 
+import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,11 +48,12 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
     private OnFragmentInteractionListener mListener;
     private TextView tvTime;
     private Button btnSleeping;
-    private ImageButton alarmState;
+    private ImageButton alarmState,musicState;
     private boolean mode24Hour = true;
-    private boolean bo_alarmState;
-
+    private boolean bo_alarmState,bo_musicState;
     private int mHour, mMinute;
+    Intent intent = new Intent();
+
 
     public AlarmFragment() {
         // Required empty public constructor
@@ -84,7 +88,7 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.i(TAG, getClass().getSimpleName() + ":entered onCreateView()");
@@ -92,7 +96,9 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
         tvTime = view.findViewById(R.id.tv_time);
         btnSleeping = view.findViewById(R.id.button_sleeping);
         alarmState = view.findViewById(R.id.ib_alarmState);
+        musicState = view.findViewById(R.id.ib_playMusic);
         loadAlarmState();
+        loadMusicState();
         loadTime();
 
 
@@ -157,9 +163,48 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
                 saveAlarmState(bo_alarmState);
             }
         });
+
+        musicState.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                int duration = ((MainActivity)getActivity()).getDurationIndex();
+                int music = ((MainActivity)getActivity()).getMusicIndex();
+                System.out.println("Fragment "+ Integer.toString(music));
+                intent.setClass(getActivity(), AudioService.class);
+                if(bo_musicState){
+                    musicState.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_musicstop));
+                    bo_musicState = false;
+                    intent.putExtra("musicIndex",music);
+                    getActivity().startService(intent);
+                    handler.sendEmptyMessageDelayed(0,(duration+1)*600*1000);
+
+
+                }else{
+                    musicState.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_musicplay));
+                    bo_musicState = true;
+                    getActivity().stopService(intent);
+
+                }
+                saveMusicState(bo_musicState);
+
+            }
+        });
         return view;
 
     }
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            getActivity().stopService(intent);
+            musicState.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_musicplay));
+            bo_musicState = true;
+            saveMusicState(bo_musicState);
+            super.handleMessage(msg);
+        }
+    };
 
     public void showTime( int hourOfDay, int minute) {
         String hourString = hourOfDay < 10 ? "0"+hourOfDay : ""+hourOfDay;
@@ -287,6 +332,22 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
         }else{
             bo_alarmState = saveAlarmState.getBoolean("state",true);
             alarmState.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_closealarm));
+        }
+    }
+
+    public void saveMusicState(boolean state){
+
+        SharedPreferences saveMusicState = this.getActivity().getSharedPreferences("MusicState", Context.MODE_PRIVATE);
+        saveMusicState.edit().putBoolean("state", state).apply();
+    }
+    public void loadMusicState(){
+        SharedPreferences saveMusicState = this.getActivity().getSharedPreferences("MusicState", Context.MODE_PRIVATE);
+        if(saveMusicState.getBoolean("state",true)){
+            bo_musicState = saveMusicState.getBoolean("state",true);
+            musicState.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_musicplay));
+        }else{
+            bo_musicState = saveMusicState.getBoolean("state",true);
+            musicState.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_musicstop));
         }
     }
 

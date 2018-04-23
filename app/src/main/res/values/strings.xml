@@ -56,6 +56,22 @@
         <item>60min</item>
     </string-array>
 
+    <string-array name="musicDuration">
+        <item>10min</item>
+        <item>20min</item>
+        <item>30min</item>
+        <item>40min</item>
+        <item>50min</item>
+        <item>60min</item>
+    </string-array>
+    <string-array name="musicList">
+        <item>childhood</item>
+        <item>dream of snow</item>
+        <item>happy</item>
+        <item>kiss the rain</item>
+        <item>morning</item>
+        <item>painoking</item>
+    </string-array>
     <string-array name="ageTips">
         <item>You do not input your age, no tips for you.</item>
         <item>Sleep time for You should not be less than 12 hours.</item>
