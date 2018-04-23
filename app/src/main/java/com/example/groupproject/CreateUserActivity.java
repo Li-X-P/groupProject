@@ -83,21 +83,27 @@ public class CreateUserActivity extends AppCompatActivity {
                         if(isPassword){
                             if(isQuestion){
                                 if(isAnswer){
-                                    boolean isInserted = userDb.insertData(account, password, question, answer);
-                                    if (isInserted) {
-                                        Toast.makeText(getBaseContext(),
-                                                "you have created account ",
-                                                Toast.LENGTH_LONG).show();
-                                        Intent intent = new Intent();
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("Account",mET_account.getText().toString());
-                                        intent.putExtras(bundle);
-                                        setResult(1,intent);
-                                        finish();
+                                    if(password.length()>=9){
+                                        boolean isInserted = userDb.insertData(account, password, question, answer);
+                                        if (isInserted) {
+                                            Toast.makeText(getBaseContext(),
+                                                    "you have created account ",
+                                                    Toast.LENGTH_LONG).show();
+                                            Intent intent = new Intent();
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("Account",mET_account.getText().toString());
+                                            intent.putExtras(bundle);
+                                            setResult(1,intent);
+                                            finish();
 
-                                    } else {
+                                        } else {
+                                            Toast.makeText(getBaseContext(),
+                                                    "account can not be created ",
+                                                    Toast.LENGTH_LONG).show();
+                                        }
+                                    }else{
                                         Toast.makeText(getBaseContext(),
-                                                "account can not be created ",
+                                                "The password should be more than 9 characters" ,
                                                 Toast.LENGTH_LONG).show();
                                     }
                                 }else {

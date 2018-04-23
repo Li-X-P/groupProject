@@ -1,12 +1,15 @@
 package com.example.groupproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -40,6 +43,8 @@ public class LoginActivity extends AppCompatActivity {
     private BaseUiListener mIUiListener;
     private UserInfo mUserInfo;
     private ImageView head;
+    private boolean ifCheck;
+    private CheckBox cb_remember;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +62,6 @@ public class LoginActivity extends AppCompatActivity {
         if(bundle.getBoolean("isLogin")) {
             setContentView(R.layout.activity_haslogin);
             head = (ImageView) findViewById(R.id.imageView3);
-            System.out.println("true");
             LogoutButton = (Button)findViewById(R.id.logout);
 
             LogoutButton.setOnClickListener(new View.OnClickListener() {
@@ -78,10 +82,23 @@ public class LoginActivity extends AppCompatActivity {
         }
         else{
             setContentView(R.layout.activity_login);
-            System.out.println("false");
             userDb = new DatabaseHelper(this);
             mET_account = (EditText)findViewById(R.id.ET_id) ;
             mET_password = (EditText)findViewById(R.id.ET_password) ;
+            cb_remember = (CheckBox)findViewById(R.id.cb_remember) ;
+            cb_remember.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+                        ifCheck =true;
+                        saveCheckState(ifCheck);
+
+                    }else{
+                        ifCheck = false;
+                        saveCheckState(ifCheck);
+                    }
+                }
+            });
             CreateButton = (Button) findViewById(R.id.CreatBtn);
             CreateButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -133,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
                             while (res.moveToNext()) {
                                 getPassword = res.getString(2);
                                 getUserName = res.getString(1);
-                                //System.out.println(getPassword);
+
                                 //buffer.append("Account :"+ res.getString(1)+"\n");
                                 //buffer.append("Password :"+ res.getString(2)+"\n");
                                 //buffer.append("Question :"+ res.getString(3)+"\n");
@@ -148,6 +165,9 @@ public class LoginActivity extends AppCompatActivity {
                                 bundle.putString("userName",getUserName);
                                 intent.putExtras(bundle);
                                 setResult(2,intent);
+                                if(ifCheck){
+                                    saveAccount(mET_account.getText().toString(),mET_password.getText().toString());
+                                }
                                 finish();
                             }else{
                                 Toast.makeText(getBaseContext(),
@@ -279,5 +299,47 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+    private void saveAccount(String name, String password){
+        SharedPreferences pref = getSharedPreferences("Account", MODE_PRIVATE);
+        pref.edit().putString("name",name).apply();
+        pref.edit().putString("password",password).apply();
+    }
+    private void loadAccount(){
+        SharedPreferences pref = getSharedPreferences("Account", MODE_PRIVATE);
+        if(ifCheck){
+            mET_account.setText(pref.getString("name",""));
+            mET_password.setText(pref.getString("password",""));
+        }else{
+            mET_account.setText("");
+            mET_password.setText("");
+        }
+
+    }
+    private void saveCheckState(boolean state){
+        SharedPreferences pref = getSharedPreferences("CheckState", MODE_PRIVATE);
+        pref.edit().putBoolean("state",state).apply();
+    }
+    private void loadCheckState(){
+        SharedPreferences pref = getSharedPreferences("CheckState", MODE_PRIVATE);
+        ifCheck = pref.getBoolean("state",false);
+        if(ifCheck) {
+            cb_remember.setChecked(true);
+        }
+        else {
+            cb_remember.setChecked(false);
+        }
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Bundle bundle = getIntent().getExtras();
+        if(bundle.getBoolean("isLogin")){
+
+        }else{
+            loadCheckState();
+            loadAccount();
+        }
+
     }
 }
