@@ -81,7 +81,7 @@ public class SleepActivity extends AppCompatActivity {
     boolean mtest = false;
     TextView mResult;
     int hour_system, minute_system, light_sleep = 0, deep_sleep = 0, awake = 0;
-    private  int mHour,mMinute,mDuration;
+    private  int mHour,mMinute,mDuration,mSound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,13 +93,29 @@ public class SleepActivity extends AppCompatActivity {
         mHour = goSleeping.getInt("hour");
         mMinute = goSleeping.getInt("minute");
         mDuration = goSleeping.getInt("Duration");
+        mSound = goSleeping.getInt("soundIndex");
 
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         linlayContent = (LinearLayout) findViewById(R.id.linlay_content);
         mResult = (TextView) findViewById(R.id.textView2);
         imageView = (ImageView)findViewById(R.id.imageView);
         imageView.setImageResource(R.drawable.wake_up);
-        Uri uri = Uri.parse("android.resource://"+ getPackageName()+"/"+ R.raw.fakereal);
+
+        Uri uri = null;
+        if(mSound == 0){
+            uri = Uri.parse("android.resource://"+ getPackageName()+"/"+ R.raw.innocence);
+        }else if(mSound == 1){
+            uri = Uri.parse("android.resource://"+ getPackageName()+"/"+ R.raw.fakereal);
+        }else if(mSound == 2){
+            uri = Uri.parse("android.resource://"+ getPackageName()+"/"+ R.raw.loveconfession);
+        }else if(mSound == 3){
+            uri = Uri.parse("android.resource://"+ getPackageName()+"/"+ R.raw.tomyfriend);
+        }else if(mSound == 4){
+            uri = Uri.parse("android.resource://"+ getPackageName()+"/"+ R.raw.xiyouji);
+        }else{
+            uri = Uri.parse("android.resource://"+ getPackageName()+"/"+ R.raw.tongtiandadao);
+        }
+
         mediaPlayer = MediaPlayer.create(getApplicationContext(),uri);
         StartSleep();
 
@@ -123,6 +139,10 @@ public class SleepActivity extends AppCompatActivity {
         });*/
     }
 
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(false);
+    }
     //click on the test button
     public void MeasureNoise(View view){
         if(isSleepingNow == true){
@@ -151,6 +171,7 @@ public class SleepActivity extends AppCompatActivity {
     }
     // click on the start button
     public void StartSleep(){
+
         if(isSleepingNow == false){
             isSleepingNow = true;
             linlayContent.addView(createTextView("You are now in the sleeping mode...", linLayParams));
@@ -314,47 +335,55 @@ public class SleepActivity extends AppCompatActivity {
                     double [] Voice_Sample = new double[15];
                     double sample_sum = 0, sample_ave = 0, sample_var = 0;
                     while (isGetVoiceRun) {
-                        //r是实际读取的数据长度，一般而言r会小于buffersize
-                        int r = mAudioRecord.read(buffer, 0, BUFFER_SIZE);
-                        long v = 0;
-                        // 将 buffer 内容取出，进行平方和运算
-                        for (int i = 0; i < buffer.length; i++) {
-                            v += buffer[i] * buffer[i];
-                        }
-                        // 平方和除以数据总长度，得到音量大小。
-                        double mean = v / (double) r;
-                        double volume = 10 * Math.log10(mean);
-                        Voice_Sample[sample_count] = volume;
-                        sample_sum += volume;
-                        sample_count++;
-                        if(sample_count == 15){
-                            sample_ave = sample_sum / 15;
-                            sample_sum = 0;
-                            double delta = 0;
-                            for(sample_count = 0; sample_count < 15; sample_count++){
-                                delta = Voice_Sample[sample_count] - sample_ave;
-                                sample_var += (delta * delta);
+
+                        if((hour_system * 60 + minute_system) == mHour * 60 + mMinute){
+                            isGetVoiceRun = false;
+                            mediaPlayer.start();
+                            Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(5000);
+                        }else{
+                            //r是实际读取的数据长度，一般而言r会小于buffersize
+                            int r = mAudioRecord.read(buffer, 0, BUFFER_SIZE);
+                            long v = 0;
+                            // 将 buffer 内容取出，进行平方和运算
+                            for (int i = 0; i < buffer.length; i++) {
+                                v += buffer[i] * buffer[i];
                             }
-                            sample_var = sample_var/15;
-                            System.out.println(Double.toString(sample_var));
-                            sample_count = 0;
-                            if(sample_var <30){
-                                deep_sleep++;
-                            }else if(sample_var < 400){
-                                light_sleep++;
-                                if((hour_system * 60 + minute_system ) >= ( mHour * 60 + mMinute - mDuration)) {
-                                    count1++;
+                            // 平方和除以数据总长度，得到音量大小。
+                            double mean = v / (double) r;
+                            double volume = 10 * Math.log10(mean);
+                            Voice_Sample[sample_count] = volume;
+                            sample_sum += volume;
+                            sample_count++;
+                            if(sample_count == 15){
+                                sample_ave = sample_sum / 15;
+                                sample_sum = 0;
+                                double delta = 0;
+                                for(sample_count = 0; sample_count < 15; sample_count++){
+                                    delta = Voice_Sample[sample_count] - sample_ave;
+                                    sample_var += (delta * delta);
+                                }
+                                sample_var = sample_var/15;
+                                System.out.println(Double.toString(sample_var));
+                                sample_count = 0;
+                                if(sample_var <30){
+                                    deep_sleep++;
+                                }else if(sample_var < 400){
+                                    light_sleep++;
+                                    if((hour_system * 60 + minute_system ) >= ( mHour * 60 + mMinute - mDuration)) {
+                                        count1++;
+                                    }else{
+                                        count1 = 0;
+                                    }
+                                    if(count1 == 2){
+                                        isGetVoiceRun = false;
+                                        mediaPlayer.start();
+                                        Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+                                        vibrator.vibrate(5000);
+                                    }
                                 }else{
-                                    count1 = 0;
+                                    awake++;
                                 }
-                                if(count1 == 2){
-                                    isGetVoiceRun = false;
-                                    mediaPlayer.start();
-                                    Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-                                    vibrator.vibrate(3000);
-                                }
-                            }else{
-                                awake++;
                             }
                         }
                         //onGetVoiceListener.onGetVoice(volume);
@@ -367,10 +396,10 @@ public class SleepActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    mAudioRecord.stop();
+                    mAudioRecord.release();
+                    mAudioRecord = null;
                 }
-                mAudioRecord.stop();
-                mAudioRecord.release();
-                mAudioRecord = null;
             }
         }).start();
     }

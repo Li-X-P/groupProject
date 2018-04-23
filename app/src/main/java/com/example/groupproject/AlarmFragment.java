@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -122,11 +123,16 @@ public class AlarmFragment extends Fragment implements TimePickerDialog.OnTimeSe
         btnSleeping.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                int soundIndex = ((MainActivity)getActivity()).getSoundIndex();
+                int rangeIndex = ((MainActivity)getActivity()).getRangeIndex();
+
                 Intent goSleeping = new Intent(getActivity(),SleepActivity.class);
                 Bundle timeSet = new Bundle();
                 timeSet.putInt("hour",mHour);
                 timeSet.putInt("minute",mMinute);
-                timeSet.putInt("Duration",30);
+                timeSet.putInt("Duration",(rangeIndex+1)*10);
+                timeSet.putInt("soundIndex",soundIndex);
                 goSleeping.putExtras(timeSet);
                 getActivity().startActivityForResult(goSleeping,2);
             }

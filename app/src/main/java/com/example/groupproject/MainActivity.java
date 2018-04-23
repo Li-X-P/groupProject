@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity
     private String mUserName;
     private Bundle information = new Bundle();
     private boolean nightMode, isLogin;
-    private Bundle sleepTime;
-    private int mDeep = 0,mLight = 0,mAwake = 0,soundIndex;
+    private Bundle sleepTime , sound;
+    private int mDeep = 0,mLight = 0,mAwake = 0,soundIndex,rangeIndex;
 
 
     @Override
@@ -85,19 +85,10 @@ public class MainActivity extends AppCompatActivity
         setSelection(0);
 
     }
-    @Override
-    public void onAttachFragment(Fragment fragment){
 
-        //当前的界面的保存状态，只是重新让新的Fragment指向了原本未被销毁的fragment，它就是onAttach方法对应的Fragment对象
-        if(fragmentAlarm == null && fragment instanceof AlarmFragment){
-            fragmentAlarm = (AlarmFragment)fragment;
-        }else if(fragmentReport == null && fragment instanceof ReportFragment){
-            fragmentReport = (ReportFragment)fragment;
-        }
-    }
     /*
-    动态切换Item图标
-     */
+动态切换Item图标
+ */
 /*    @Override
     public boolean onPrepareOptionsMenu(Menu menu){
         if (nightMode) {
@@ -112,6 +103,17 @@ public class MainActivity extends AppCompatActivity
         return super.onPrepareOptionsMenu(menu);
     }*/
 
+
+    @Override
+    public void onAttachFragment(Fragment fragment){
+
+        //当前的界面的保存状态，只是重新让新的Fragment指向了原本未被销毁的fragment，它就是onAttach方法对应的Fragment对象
+        if(fragmentAlarm == null && fragment instanceof AlarmFragment){
+            fragmentAlarm = (AlarmFragment)fragment;
+        }else if(fragmentReport == null && fragment instanceof ReportFragment){
+            fragmentReport = (ReportFragment)fragment;
+        }
+    }
     /*
     关于BottomNavigation 的选择
      */
@@ -144,8 +146,10 @@ public class MainActivity extends AppCompatActivity
             case 0:
                 if (fragmentAlarm == null) {
                     fragmentAlarm = new AlarmFragment();
+                    fragmentAlarm.setArguments(sound);
                     mfragmentTransaction.add(R.id.fragment_container, fragmentAlarm);
                 }else {
+                    fragmentAlarm.setArguments(sound);
                     mfragmentTransaction.show(fragmentAlarm);
                 }
                 break;
@@ -207,7 +211,7 @@ public class MainActivity extends AppCompatActivity
             startActivityForResult(Information,1);
         }else if(id == R.id.nav_setting){
             Intent Setting = new Intent(this,SettingActivity.class);
-            startActivity(Setting);
+            startActivityForResult(Setting,1);
         }else if(id == R.id.nav_about){
             Intent About = new Intent(this,AboutActivity.class);
             startActivity(About);
@@ -243,7 +247,7 @@ public class MainActivity extends AppCompatActivity
                     }
                     information.putInt("age", age);
                     information.putDouble("BMI", BMI);
-                    //System.out.println(information);
+
                 }
                 case 2:{
                     Bundle loginState = data.getExtras();
@@ -258,10 +262,10 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
                 case 3:{
-
-                    Bundle soundSelect = data.getExtras();
-                    soundIndex = soundSelect.getInt("index");
-                    saveSound(soundIndex);
+                    Bundle settingSelect = data.getExtras();
+                    soundIndex = settingSelect.getInt("soundIndex");
+                    rangeIndex = settingSelect.getInt("rangeIndex");
+                    saveSound(soundIndex,rangeIndex);
                 }
             }
         }
@@ -330,13 +334,20 @@ public class MainActivity extends AppCompatActivity
             userName.setText(mUserName);
         }
     }
-    public void saveSound( int Index) {
-        SharedPreferences pref = getSharedPreferences("sound_main", MODE_PRIVATE);
-        pref.edit().putInt("Index",Index).apply();
+    public void saveSound( int soundIndex,int rangeIndex) {
+        SharedPreferences pref = getSharedPreferences("setting_main", MODE_PRIVATE);
+        pref.edit().putInt("soundIndex",soundIndex).apply();
+        pref.edit().putInt("rangeIndex",rangeIndex).apply();
+
     }
     public void loadSound() {
-        SharedPreferences pref = getSharedPreferences("sound_main", MODE_PRIVATE);
-        soundIndex = pref.getInt("Index", 0);
+        SharedPreferences pref = getSharedPreferences("setting_main", MODE_PRIVATE);
+        soundIndex = pref.getInt("soundIndex", 0);
+        rangeIndex = pref.getInt("rangeIndex", 2);
+        setSoundIndex(soundIndex);
+        setRangeIndex(rangeIndex);
+
+        //System.out.println("load  "+Integer.toString(rangeIndex));
 
     }
     @Override
@@ -344,5 +355,18 @@ public class MainActivity extends AppCompatActivity
         super.onStart();
         loadLoginState();
         loadPersonalNightMode();
+        loadSound();
+    }
+    public int getSoundIndex() {
+        return soundIndex;
+    }
+    public void setSoundIndex(int soundIndex){
+        this.soundIndex = soundIndex;
+    }
+    public int getRangeIndex() {
+        return rangeIndex;
+    }
+    public void setRangeIndex(int rangeIndex){
+        this.rangeIndex = rangeIndex;
     }
 }

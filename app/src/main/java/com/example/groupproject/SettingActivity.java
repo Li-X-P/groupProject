@@ -13,8 +13,8 @@ import android.widget.Spinner;
 
 public class SettingActivity extends AppCompatActivity {
 
-    Spinner sp_sounds;
-    int sound;
+    Spinner sp_sounds,sp_wakeRange;
+    int sound,range;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,19 +22,39 @@ public class SettingActivity extends AppCompatActivity {
         setTitle("Setting");
 
         final String[] soundsList;
+        final String[]  rangeList;
         soundsList = getResources().getStringArray(R.array.soundList);
+        rangeList = getResources().getStringArray(R.array.wakeRange);
+
         ArrayAdapter<String> adapterSoundsList = new ArrayAdapter<String>(this,
                 R.layout.dropdown_question, soundsList);
+
+        ArrayAdapter<String> adapterRangeList = new ArrayAdapter<String>(this,
+                R.layout.dropdown_question, rangeList);
+
         sp_sounds = (Spinner)findViewById(R.id.sp_sound) ;
         sp_sounds.setAdapter(adapterSoundsList);
-
         sp_sounds.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0,
                                        View arg1, int arg2, long arg3) {
                 int index = arg0.getSelectedItemPosition();
-                savePreferences(index);
                 sound = index;
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+
+        sp_wakeRange = (Spinner)findViewById(R.id.sp_range);
+        sp_wakeRange.setAdapter(adapterRangeList);
+        sp_wakeRange.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0,
+                                       View arg1, int arg2, long arg3) {
+                int index = arg0.getSelectedItemPosition();
+                range = index;
 
             }
             @Override
@@ -44,14 +64,18 @@ public class SettingActivity extends AppCompatActivity {
     }
 
 
-    private void savePreferences( int soundIndex) {
-        SharedPreferences pref = getSharedPreferences("sound_setting", MODE_PRIVATE);
+    private void savePreferences( int soundIndex,int rangeIndex) {
+        SharedPreferences pref = getSharedPreferences("Preferences_setting", MODE_PRIVATE);
         pref.edit().putInt("soundIndex",soundIndex).apply();
+        pref.edit().putInt("rangeIndex",rangeIndex).apply();
     }
     private void loadPreferences() {
-        SharedPreferences pref = getSharedPreferences("sound_setting", MODE_PRIVATE);
+
+        SharedPreferences pref = getSharedPreferences("Preferences_setting", MODE_PRIVATE);
         sp_sounds.setSelection(pref.getInt("soundIndex", 0));
+        sp_wakeRange.setSelection(pref.getInt("rangeIndex", 2));
         sound =pref.getInt("soundIndex", 0);
+        range =pref.getInt("rangeIndex", 2);
     }
     @Override
     protected void onStart() {
@@ -61,13 +85,15 @@ public class SettingActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
 
+        savePreferences(sound,range);
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putInt("index",sound);
+        bundle.putInt("soundIndex",sound);
+        bundle.putInt("rangeIndex",range);
         intent.putExtras(bundle);
         setResult(3,intent);
+        super.onBackPressed();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
@@ -75,9 +101,11 @@ public class SettingActivity extends AppCompatActivity {
         // TODO Auto-generated method stub
         if(item.getItemId() == android.R.id.home)
         {
+            savePreferences(sound,range);
             Intent intent = new Intent();
             Bundle bundle = new Bundle();
-            bundle.putInt("index",sound);
+            bundle.putInt("soundIndex",sound);
+            bundle.putInt("rangeIndex",range);
             intent.putExtras(bundle);
             setResult(3,intent);
             finish();

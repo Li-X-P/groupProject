@@ -47,6 +47,15 @@
         <item>通天大道</item>
     </string-array>
 
+    <string-array name="wakeRange">
+        <item>10min</item>
+        <item>20min</item>
+        <item>30min</item>
+        <item>40min</item>
+        <item>50min</item>
+        <item>60min</item>
+    </string-array>
+
     <string-array name="ageTips">
         <item>You do not input your age, no tips for you.</item>
         <item>Sleep time for You should not be less than 12 hours.</item>

@@ -89,7 +89,11 @@ public class InformationActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
-                                finish();
+                                if(age_index == 0)
+                                {
+
+                                }else
+                                    finish();
                             }
                         });
                 builder.create();
