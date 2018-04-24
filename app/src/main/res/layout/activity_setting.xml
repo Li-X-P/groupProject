@@ -26,6 +26,8 @@
             android:layout_marginLeft="32dp"
             android:layout_marginTop="16dp"
             android:text="Sound:"
+            android:textStyle="bold"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
         <Spinner
@@ -34,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
             android:layout_marginTop="16dp"
+            android:textColor="@color/black"
             android:spinnerMode="dialog" />
     </LinearLayout>
 
@@ -49,6 +52,8 @@
             android:layout_marginLeft="32dp"
             android:layout_marginTop="16dp"
             android:text="Range:"
+            android:textStyle="bold"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
         <Spinner
@@ -57,6 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
             android:layout_marginTop="16dp"
+            android:textColor="@color/black"
             android:spinnerMode="dialog" />
     </LinearLayout>
 
@@ -72,6 +78,8 @@
             android:layout_marginLeft="32dp"
             android:layout_marginTop="16dp"
             android:text="Music:"
+            android:textStyle="bold"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
         <Spinner
@@ -80,6 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
             android:layout_marginTop="16dp"
+            android:textColor="@color/black"
             android:spinnerMode="dialog" />
     </LinearLayout>
 
@@ -95,6 +104,8 @@
             android:layout_marginLeft="32dp"
             android:layout_marginTop="16dp"
             android:text="Duration:"
+            android:textStyle="bold"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
         <Spinner
@@ -103,6 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
             android:layout_marginTop="16dp"
+            android:textColor="@color/black"
             android:spinnerMode="dialog" />
     </LinearLayout>
 
@@ -119,6 +131,8 @@
             android:layout_marginLeft="32dp"
             android:layout_marginTop="16dp"
             android:text="@string/storage"
+            android:textStyle="bold"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
         <TextView
@@ -130,6 +144,7 @@
             android:gravity="center"
             android:background="@drawable/jiashen"
             android:text="0kb"
+            android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -146,6 +161,8 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:text="@string/deleteReport"
+            android:textStyle="bold"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
         <LinearLayout
@@ -160,6 +177,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/button1"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
                 android:text="Delete"
                 android:textSize="20sp" />
         </LinearLayout>
